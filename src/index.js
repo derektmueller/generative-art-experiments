@@ -1,8 +1,22 @@
 import p5 from 'p5';
 import 'reset-css';
 import './scss/style.scss';
+import GIF from 'gif.js.optimized';
 
 const pointCount = 20;
+let gif;
+
+function setupGif() {
+  gif = new GIF({
+    workers: 5,
+    quality: 10
+  });
+
+  gif.on('finished', function(blob) {
+    window.open(URL.createObjectURL(blob));
+    setupGif();
+  });
+}
 
 function mkConfig() {
   return {
@@ -104,12 +118,22 @@ class State {
 
 new p5((p5) => {
   let state = new State;
+  let cx, recording = false;
 
   p5.setup = () => {
-    p5.createCanvas(window.innerWidth, window.innerHeight);
+    setupGif();
+    cx = p5.createCanvas(window.innerWidth, window.innerHeight);
     state.points = (new Array(pointCount)).fill(0).map(() =>
       new Point(window.innerWidth / 2, window.innerHeight / 2, mkConfig()));
   };
+
+  p5.mousePressed = () => {
+    recording = !recording;
+    if (!recording) {
+      console.log('render');
+      gif.render();
+    }
+  }
 
   p5.draw = () => {
     p5.background('gray');
@@ -123,5 +147,9 @@ new p5((p5) => {
 
     state.points = state.points.map((point) => moveMap(p5, point, f));
     state.points.forEach((point) => drawPoint(p5, point));
+
+    if (recording) {
+      gif.addFrame(cx.elt, {delay: 1, copy: true});
+    }
   };
 });

@@ -11,7 +11,11 @@ module.exports = {
     new CopyWebpackPlugin([
       {
         from: './src/index.html',
-        to: './dist/index.html'
+        to: 'index.html'
+      },
+      {
+        from: './node_modules/gif.js.optimized/dist/gif.worker.js',
+        to: 'gif.worker.js'
       }
     ])
   ],

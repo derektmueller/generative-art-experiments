@@ -13,6 +13,7 @@
   "dependencies": {
     "copy-webpack-plugin": "^4.5.2",
     "css-loader": "^1.0.0",
+    "gif.js.optimized": "^1.0.1",
     "node-sass": "^4.9.3",
     "p5": "^0.7.2",
     "reset-css": "^4.0.1",
